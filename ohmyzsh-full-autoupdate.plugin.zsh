@@ -118,6 +118,20 @@ omzFullUpdate() {
         local packageDir=$(dirname "$package")
         local packageName=$(basename "$packageDir")
 
+        cd "${packageDir}" || exit 1
+
+        git fetch --tags
+
+        latestTag=$(git describe --tags $(git rev-list --tags --max-count=1))
+
+        currentTag=$(git describe --tags)
+
+        # Check if the latest tag is empty (no tags available)
+        if [[ -z "${latestTag}" ]]; then
+            echo "Error: No tags found in the repository."
+            exit 1
+        fi
+
         echo "${colorYellow}Updating ${nameCustomCategory}${reset} — ${colorGreen}${packageName}${reset} -> ${colorBlue}($urlGithub)${reset}"
         git -C "${packageDir}" pull
         echo ""
