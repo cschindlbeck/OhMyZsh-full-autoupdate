@@ -119,6 +119,8 @@ omzFullUpdate() {
         local packageName=$(basename "$packageDir")
 
         echo "${colorYellow}Updating ${nameCustomCategory}${reset} — ${colorGreen}${packageName}${reset} -> ${colorBlue}($urlGithub)${reset}"
+        git -C "${packageDir}" fetch --all
+        git -C "${packageDir}" checkout master || git -C "${packageDir}" checkout main || exit 1
         git -C "${packageDir}" pull
         echo ""
     done
